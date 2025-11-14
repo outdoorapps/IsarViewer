@@ -15,24 +15,22 @@ import 'models/company_bus_route.dart';
 
 class IsarManager {
   // Change definition if necessary
-  static const isarFileName = 'default.isar';
-  static final isarAssetPath = join('assets', 'isar', isarFileName);
+  static const isarFileName = 'default'; // Do not include .isar
+  static final isarAssetPath = join('assets', 'isar', '$isarFileName.isar');
 
   /// This must be called before any data is read
   /// For future reference: for any schema change, putting an updated database
   /// in the asset folder will trigger a database rebuild
   static Future<void> init() async {
+    // Copy the assets isar file to the app's documents directory
     final bytes = await rootBundle.load(isarAssetPath);
 
     // A writable directory for Isar
     final dir = await getApplicationDocumentsDirectory();
-    final dbPath = join(dir.path, isarFileName);
+    final dbPath = join(dir.path, '$isarFileName.isar');
 
-    // If DB doesn't exist yet, write it
     final file = File(dbPath);
-    if (!await file.exists()) {
-      await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
-    }
+    await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
 
     await Isar.open(
       [
