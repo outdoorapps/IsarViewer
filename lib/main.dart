@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:isar_viewer/isar/isar_manager.dart';
 
-void main() async {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await IsarManager.init();
   runApp(const IsarViewerApp());
 }
