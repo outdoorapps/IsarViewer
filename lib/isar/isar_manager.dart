@@ -3,15 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:isar_community/isar.dart';
-import 'package:isar_viewer/isar/models/bus_route.dart';
-import 'package:isar_viewer/isar/models/bus_stop.dart';
-import 'package:isar_viewer/isar/models/minibus_route.dart';
-import 'package:isar_viewer/isar/models/minibus_stop.dart';
-import 'package:isar_viewer/isar/models/track.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'models/company_bus_route.dart';
+import 'package:up_bus_hk_core/isar/models/bus_route.dart';
+import 'package:up_bus_hk_core/isar/models/bus_stop.dart';
+import 'package:up_bus_hk_core/isar/models/company_bus_route.dart';
+import 'package:up_bus_hk_core/isar/models/minibus_route.dart';
+import 'package:up_bus_hk_core/isar/models/minibus_stop.dart';
+import 'package:up_bus_hk_core/isar/models/track.dart';
 
 class IsarManager {
   // Change definition if necessary
@@ -22,15 +21,8 @@ class IsarManager {
   /// For future reference: for any schema change, putting an updated database
   /// in the asset folder will trigger a database rebuild
   static Future<void> init() async {
-    // Copy the assets isar file to the app's documents directory
-    final bytes = await rootBundle.load(isarAssetPath);
-
-    // A writable directory for Isar
-    final dir = await getApplicationDocumentsDirectory();
-    final dbPath = join(dir.path, '$isarFileName.isar');
-
-    final file = File(dbPath);
-    await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
+    final documentDir = await getApplicationDocumentsDirectory();
+    await _copyAssetIsarFile(documentDir);
 
     await Isar.open(
       [
@@ -41,8 +33,17 @@ class IsarManager {
         MinibusStopSchema,
         TrackSchema,
       ],
-      directory: dir.path,
+      directory: documentDir.path,
       name: isarFileName,
     );
+  }
+
+  /// Copy the assets isar file to the app's documents directory
+  static Future<void> _copyAssetIsarFile(Directory documentDir) async {
+    final bytes = await rootBundle.load(isarAssetPath);
+
+    final dbPath = join(documentDir.path, '$isarFileName.isar');
+    final file = File(dbPath);
+    await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
   }
 }
