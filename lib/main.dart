@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:isar_viewer/isar/isar_manager.dart';
+import 'package:isar_viewer/isar_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
