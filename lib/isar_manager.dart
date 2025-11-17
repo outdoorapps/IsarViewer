@@ -9,6 +9,7 @@ import 'package:up_bus_hk_core/isar/data_builder_models/bus_fare.dart';
 import 'package:up_bus_hk_core/isar/data_builder_models/company_bus_route.dart';
 import 'package:up_bus_hk_core/isar/data_builder_models/gov_bus_route.dart';
 import 'package:up_bus_hk_core/isar/data_builder_models/gov_route_stop.dart';
+import 'package:up_bus_hk_core/isar/data_builder_models/gov_stop.dart';
 import 'package:up_bus_hk_core/isar/data_builder_models/gov_stop_coordinate.dart';
 import 'package:up_bus_hk_core/isar/models/bus_route.dart';
 import 'package:up_bus_hk_core/isar/models/bus_stop.dart';
@@ -36,6 +37,7 @@ class IsarManager {
         GovRouteStopSchema,
         GovStopCoordinateSchema,
         GovBusRouteSchema,
+        GovStopSchema,
       ],
       directory: documentDir.path,
       name: builderIsarFileName,
