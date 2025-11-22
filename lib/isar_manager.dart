@@ -3,33 +3,38 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:isar_community/isar.dart';
+import 'package:isar_viewer/schema_type.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:up_bus_hk_core/isar/up_bus_hk_schema.dart';
 
 class IsarManager {
   // Change definition if necessary, do not include .isar for file names
-  static const isarFileName = 'default'; // Do not include .isar
-  static const builderIsarFileName = 'builder'; // For intermediates
+  static const _appIsarFileName = 'default'; // Do not include .isar
+  static const _builderIsarFileName = 'builder'; // For intermediates
+  static Isar? _isar;
 
   /// This must be called before any data is read
   /// For future reference: for any schema change, putting an updated database
   /// in the asset folder will trigger a database rebuild
   static Future<void> init() async {
     final documentDir = await getApplicationDocumentsDirectory();
-    await _copyAssetIsarFile(documentDir, builderIsarFileName);
-    await _copyAssetIsarFile(documentDir, isarFileName);
+    await _copyAssetIsarFile(documentDir, _builderIsarFileName);
+    await _copyAssetIsarFile(documentDir, _appIsarFileName);
+  }
 
-    await Isar.open(
-      UpBusHkSchema.builderSchemas,
-      directory: documentDir.path,
-      name: builderIsarFileName,
-    );
+  static Future<void> open(SchemaType schemaType) async {
+    await _isar?.close();
 
-    await Isar.open(
-      UpBusHkSchema.schemas,
+    final documentDir = await getApplicationDocumentsDirectory();
+    _isar = await Isar.open(
+      schemaType == SchemaType.builder
+          ? UpBusHkSchema.builderSchemas
+          : UpBusHkSchema.appSchemas,
       directory: documentDir.path,
-      name: isarFileName,
+      name: schemaType == SchemaType.builder
+          ? _builderIsarFileName
+          : _appIsarFileName,
     );
   }
 

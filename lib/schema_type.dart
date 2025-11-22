@@ -1,0 +1,1 @@
+enum SchemaType{builder, app}
