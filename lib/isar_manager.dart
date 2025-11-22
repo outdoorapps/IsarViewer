@@ -28,9 +28,7 @@ class IsarManager {
 
     final documentDir = await getApplicationDocumentsDirectory();
     _isar = await Isar.open(
-      schemaType == SchemaType.builder
-          ? UpBusHkSchema.builderSchemas
-          : UpBusHkSchema.appSchemas,
+      [...UpBusHkSchema.builderSchemas, ...UpBusHkSchema.appSchemas],
       directory: documentDir.path,
       name: schemaType == SchemaType.builder
           ? _builderIsarFileName
